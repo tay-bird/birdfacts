@@ -3,10 +3,10 @@ import re
 import markovify
 import wikipedia
 
-from nametext import NameText
+from lib.nametext import NameText
 
 
-def create_model_from_corpus(path, parser, state_size=2):
+def _create_model_from_corpus(path, parser, state_size=2):
     with open(path) as f:
         text = f.read()
 
@@ -18,7 +18,7 @@ def sub_in_name(name, text):
     return re.sub('@@SPECIES@@', name, text)
 
 
-def format_fact(name, start_sentence, final_sentence):
+def _format_fact(name, start_sentence, final_sentence):
     fact = '{name}: {start_sentence} {final_sentence}'.format(
         name=name,
         start_sentence=sub_in_name(name, start_sentence),
@@ -29,18 +29,14 @@ def format_fact(name, start_sentence, final_sentence):
 
 
 def get_fact():
-    name_model = create_model_from_corpus('names.txt', NameText, 5)
-    name = name_model.make_sentence()
+    name_model = _create_model_from_corpus('names.txt', NameText, 5)
+    text_model = _create_model_from_corpus('summaries.txt', markovify.Text, 3)
 
-    text_model = create_model_from_corpus('summaries.txt', markovify.Text, 3)
+    name = name_model.make_sentence()
     start_sentence = text_model.make_sentence_with_start('The @@SPECIES@@')
-    final_sentence = text_model.make_sentence()
+    final_sentence = text_model.make_sentence_with_start('It')
     
-    fact = format_fact(name, start_sentence, final_sentence)
+    fact = _format_fact(name, start_sentence, final_sentence)
 
     return fact
 
-
-if __name__ == '__main__':
-    fact = get_fact()
-    print fact
