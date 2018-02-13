@@ -1,3 +1,5 @@
+import re
+
 import markovify
 import wikipedia
 
@@ -13,7 +15,7 @@ def create_model_from_corpus(path, parser, state_size=2):
 
 
 def sub_in_name(name, text):
-    re.sub('@@SPECIES@@', name, text)
+    return re.sub('@@SPECIES@@', name, text)
 
 
 if __name__ == '__main__':
@@ -21,9 +23,13 @@ if __name__ == '__main__':
     name = name_model.make_sentence()
 
     text_model = create_model_from_corpus('summaries.txt', markovify.Text, 3)
-    start_sentence = text_model.make_sentence_with_start('The')
+    start_sentence = text_model.make_sentence_with_start('The @@SPECIES@@')
     final_sentence = text_model.make_sentence()
     
-    print name
-    print sub_in_name(start_sentence)
-    print sub_in_name(final_sentence)
+    fact = '{name}: {start_sentence} {final_sentence}'.format(
+        name=name,
+        start_sentence=sub_in_name(name, start_sentence),
+        final_sentence=sub_in_name(name, final_sentence)
+    )
+
+    print fact
