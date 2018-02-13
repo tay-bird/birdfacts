@@ -18,7 +18,17 @@ def sub_in_name(name, text):
     return re.sub('@@SPECIES@@', name, text)
 
 
-if __name__ == '__main__':
+def format_fact(name, start_sentence, final_sentence):
+    fact = '{name}: {start_sentence} {final_sentence}'.format(
+        name=name,
+        start_sentence=sub_in_name(name, start_sentence),
+        final_sentence=sub_in_name(name, final_sentence)
+    )
+   
+    return fact
+
+
+def get_fact():
     name_model = create_model_from_corpus('names.txt', NameText, 5)
     name = name_model.make_sentence()
 
@@ -26,10 +36,11 @@ if __name__ == '__main__':
     start_sentence = text_model.make_sentence_with_start('The @@SPECIES@@')
     final_sentence = text_model.make_sentence()
     
-    fact = '{name}: {start_sentence} {final_sentence}'.format(
-        name=name,
-        start_sentence=sub_in_name(name, start_sentence),
-        final_sentence=sub_in_name(name, final_sentence)
-    )
+    fact = format_fact(name, start_sentence, final_sentence)
 
+    return fact
+
+
+if __name__ == '__main__':
+    fact = get_fact()
     print fact
