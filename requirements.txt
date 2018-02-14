@@ -1,2 +1,4 @@
-wikipedia
+boto3
 markovify
+python-twitter
+wikipedia
