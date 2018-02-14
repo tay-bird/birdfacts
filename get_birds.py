@@ -13,7 +13,7 @@ def get_birds():
         except:
             next
         
-        summary = re.sub(bird, '@@SPECIES@@', summary)
+        summary = re.sub(bird, '@@SPECIES@@', summary, flags=re.IGNORECASE)
 
         with open('names.txt', 'a') as f:
             f.write(bird.encode('ascii','ignore') + '\n')
