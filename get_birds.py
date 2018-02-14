@@ -1,7 +1,12 @@
 from __future__ import print_function
+import json
 import re
 
 import wikipedia
+
+from lib.utils import create_model_from_corpus
+from models import NameText
+from models import NLTKText
 
 
 def get_birds():
@@ -22,5 +27,17 @@ def get_birds():
             f.write(summary.encode('ascii', 'ignore') + '\n')
 
 
+def make_corpus():
+    name_model = create_model_from_corpus('names.txt', NameText, 5)
+    text_model = create_model_from_corpus('summaries.txt', NLTKText, 4)
+
+    with open('names_corpus.txt', 'w') as f:
+        json.dump(name_model.to_json(), f)
+
+    with open('summaries_corpus.txt', 'w') as f:
+        json.dump(text_model.to_json(), f)
+
+
 if __name__ == '__main__':
     get_birds()
+    make_corpus()
