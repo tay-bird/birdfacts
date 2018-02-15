@@ -1,4 +1,6 @@
-boto3
-markovify
-python-twitter
-wikipedia
+boto3==1.5.28
+markovify==0.7.1
+nltk==3.2.5
+twitter==1.18.0
+wikipedia==1.4.0
+zappa==0.45.1

@@ -6,6 +6,7 @@ import wikipedia
 
 from models import NameText
 from models import NLTKText
+from lib import tweeter
 from utils import load_model_from_file
 
 
@@ -33,4 +34,21 @@ def get_fact():
     fact = _format_fact(name, start_sentence, final_sentence)
 
     return fact
+
+
+def postfact():
+    tries = 3
+
+    while tries > 0:
+        try:
+            fact = get_fact()
+        except:
+            raise
+        else:
+            if len(fact) < 280:
+                break
+        finally:
+            tries = tries - 1
+    
+    tweeter.post_to_twitter(fact)
 
